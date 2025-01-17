@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if group %}
+        Maktab CRM - Guruhni yangilash
+    {% else %}
+        Maktab CRM - Guruh yaratish
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    {% if group %}
+        Maktab CRM - Guruhni yangilash
+    {% else %}
+        Maktab CRM - Guruh yaratish
+    {% endif %}
+</h1>
+<form id="createGroupForm" method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="name">Guruh nomi:</label>
+        <input type="text" id="name" name="name" placeholder="Guruh nomini kiriting" value="{{ group.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="classTeacher">Sinf rahbari:</label>
+        <select id="classTeacher" name="teacher" required>
+            <option value="{{ group.teacher }}">Sinf rahbarini tanlang</option>
+            {% for teacher in teachers %}
+                <option value="{{ teacher.id }}">
+                    {{ teacher.first_name }} {{ teacher.last_name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="students">O'quvchilar (tanlov ixtiyoriy):</label>
+        <select id="students" name="students" multiple>
+            {% if students %}
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.full_name }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="" disabled>O'quvchilar ro'yxati bo'sh</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn"><i class="fas fa-save"></i>
+            {% if group %}
+                Yangilash
+            {% else %}
+                Yaratish
+            {% endif %}
+        </button>
+        <a href="{% url 'groups:list' %}" class="btn btn-secondary"><i class="fas fa-times"></i> Bekor qilish</a>
+    </div>
+</form>
+
+{% endblock %}

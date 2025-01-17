@@ -1,0 +1,65 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Maktab CRM - Yangi o'quvchi qo'shish{% endblock %}
+
+{% block content %}
+
+<form id="createStudentForm" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="full_name">To'liq ism:</label>
+        <input type="text" id="full_name" name="full_name" value="{{ student.full_name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="group">Guruh:</label>
+        <select id="group" name="group" multiple>
+            <option value="">Guruhni tanlang</option>
+            {% for group in groups %}
+                <option value="{{ group.id }}"
+                        {% if student and group in student.group.all %}selected{% endif %}>
+                    {{ group.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="date_of_birth">Tug'ilgan sana:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ student.date_of_birth|date:'Y-m-d' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Telefon:</label>
+        <input type="text" id="phone" name="phone" value="{{ student.phone }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Manzil:</label>
+        <input type="text" id="address" name="address" value="{{ student.address }}" required>
+    </div>
+
+<div class="form-group">
+    <label for="photo">Rasm:</label>
+    {% if student and student.photo %}
+        <div>
+            <img src="{{ student.photo.url }}" alt="Eski rasm" style="max-width: 150px; max-height: 150px; margin-bottom: 10px;">
+        </div>
+    {% endif %}
+    <input type="file" id="photo" name="photo" accept="image/*">
+</div>
+    <div class="actions">
+        <button type="submit" class="btn">
+            <i class="fas fa-save"></i>
+            {% if student %}
+                Yangilash
+            {% else %}
+                Qo'shish
+            {% endif %}
+        </button>
+        <a href="{% url 'students:list' %}" class="btn btn-secondary"><i class="fas fa-times"></i> Bekor qilish</a>
+    </div>
+</form>
+
+{% endblock %}
